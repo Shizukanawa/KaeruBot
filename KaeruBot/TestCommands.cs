@@ -14,6 +14,11 @@ namespace KaeruBot
 {
     class TestCommands
     {
+        [Command("owner"), Description("A test")]
+        public async Task Owner(CommandContext ctx)
+        {
+            await ctx.RespondAsync($"{ctx.Client.CurrentApplication.Owner.Id}");
+        }
 
         [Command("reaction"), Description("a test")]
         public async Task React(CommandContext ctx)

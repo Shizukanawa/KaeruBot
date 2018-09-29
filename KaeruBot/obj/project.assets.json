@@ -5833,11 +5833,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Trung\\OneDrive\\KaeruBot\\KaeruBot\\KaeruBot.csproj",
+      "projectUniqueName": "C:\\Users\\Trung\\Repos\\KaeruBot\\KaeruBot\\KaeruBot.csproj",
       "projectName": "KaeruBot",
-      "projectPath": "C:\\Users\\Trung\\OneDrive\\KaeruBot\\KaeruBot\\KaeruBot.csproj",
+      "projectPath": "C:\\Users\\Trung\\Repos\\KaeruBot\\KaeruBot\\KaeruBot.csproj",
       "packagesPath": "C:\\Users\\Trung\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Trung\\OneDrive\\KaeruBot\\KaeruBot\\obj\\",
+      "outputPath": "C:\\Users\\Trung\\Repos\\KaeruBot\\KaeruBot\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

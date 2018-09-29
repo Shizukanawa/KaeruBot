@@ -110,97 +110,134 @@ namespace KaeruBot
         [Command("pat"), Description("Pats a user.\n**Usage:** |pat @user")]
         public async Task Pat(CommandContext ctx, [RemainingTextAttribute] DiscordUser usr)
         {
-            int GifCount = 5;
-            int result = RNG.Next(0, GifCount);
-
-            string[] Gif = PatGifs();
-
-            var embed = new DiscordEmbedBuilder()
+            if (usr.Id == ctx.User.Id)
             {
-                Author = new DiscordEmbedBuilder.EmbedAuthor
+                await ctx.RespondAsync("You can't really pat yourself... *pats*");
+            }
+            else
+            {
+                int GifCount = 5;
+                int result = RNG.Next(0, GifCount);
+
+                string[] Gif = PatGifs();
+
+                var embed = new DiscordEmbedBuilder()
                 {
-                    IconUrl = usr.AvatarUrl,
-                    Name = $"{usr.Username}, You got a pat from {ctx.User.Username}!"
-                },
-                Color = new DiscordColor("#FF6699"),
-                ImageUrl = Gif[result]
-            };
-            await ctx.RespondAsync(embed: embed.Build());
+                    Author = new DiscordEmbedBuilder.EmbedAuthor
+                    {
+                        IconUrl = usr.AvatarUrl,
+                        Name = $"{usr.Username}, You got a pat from {ctx.User.Username}!"
+                    },
+                    Color = new DiscordColor("#FF6699"),
+                    ImageUrl = Gif[result]
+                };
+                await ctx.RespondAsync(embed: embed.Build());
+            }
         }
 
         [Command("holdhand"), Description("Lewd...\n**Usage:** |holdhand @user"), Aliases("handholding", "holdinghands", "handhold", "handholds", "holdhands")]
         public async Task HoldHand(CommandContext ctx, [RemainingTextAttribute] DiscordUser usr)
         {
-            int GifCount = 9;
-            int result = RNG.Next(0, GifCount);
-
-            string[] Gif = HandHoldsGifs();
-
-            var embed = new DiscordEmbedBuilder()
+            if (usr.Id == ctx.User.Id)
             {
-                Author = new DiscordEmbedBuilder.EmbedAuthor
+                await ctx.RespondAsync("You can't do lewd things to yourself.");
+            }
+            else
+            {
+                int GifCount = 9;
+                int result = RNG.Next(0, GifCount);
+
+                string[] Gif = HandHoldsGifs();
+
+                var embed = new DiscordEmbedBuilder()
                 {
-                    IconUrl = usr.AvatarUrl,
-                    Name = $"{ctx.User.Username} held hands with {usr.Username}... Lewd...",
-                },
-                Color = new DiscordColor("#FF6699"),
-                ImageUrl = Gif[result]
-            };
-            await ctx.RespondAsync(embed: embed.Build());
+                    Author = new DiscordEmbedBuilder.EmbedAuthor
+                    {
+                        IconUrl = usr.AvatarUrl,
+                        Name = $"{ctx.User.Username} held hands with {usr.Username}... Lewd...",
+                    },
+                    Color = new DiscordColor("#FF6699"),
+                    ImageUrl = Gif[result]
+                };
+                await ctx.RespondAsync(embed: embed.Build());
+            }
         }
 
         [Command("kiss"), Description("Oh my...\n**Usage:** |kiss @user")]
         public async Task Kiss(CommandContext ctx, [RemainingTextAttribute] DiscordUser usr)
         {
-            int GifCount = 3;
-            int result = RNG.Next(0, GifCount);
-
-            string[] Gif = KissGifs();
-
-            var embed = new DiscordEmbedBuilder()
+            if (usr.Id == ctx.User.Id)
             {
-                Author = new DiscordEmbedBuilder.EmbedAuthor
+                await ctx.RespondAsync("How is that even possible?...");
+            }
+            else
+            {
+                int GifCount = 3;
+                int result = RNG.Next(0, GifCount);
+
+                string[] Gif = KissGifs();
+
+                var embed = new DiscordEmbedBuilder()
                 {
-                    IconUrl = usr.AvatarUrl,
-                    Name = $"{ctx.User.Username} kissed {usr.Username}... Aww... <3",
-                },
-                Color = new DiscordColor("#FF6699"),
-                ImageUrl = Gif[result]
-            };
-            await ctx.RespondAsync(embed: embed.Build());
+                    Author = new DiscordEmbedBuilder.EmbedAuthor
+                    {
+                        IconUrl = usr.AvatarUrl,
+                        Name = $"{ctx.User.Username} kissed {usr.Username}... Aww... <3",
+                    },
+                    Color = new DiscordColor("#FF6699"),
+                    ImageUrl = Gif[result]
+                };
+                await ctx.RespondAsync(embed: embed.Build());
+            }
         }
 
         [Command("hug"), Description("Cute!\n**Usage:** |hug @user")]
         public async Task Hug(CommandContext ctx, [RemainingTextAttribute] DiscordUser usr)
         {
-            int GifCount = 3;
-            int result = RNG.Next(0, GifCount);
-
-            string[] Gif = HugGifs();
-
-            var embed = new DiscordEmbedBuilder()
+            if (usr.Id == ctx.User.Id)
             {
-                Author = new DiscordEmbedBuilder.EmbedAuthor
+                await ctx.RespondAsync("That's going to be a little bit hard alone... *hugs*");
+            }
+            else
+            {
+                int GifCount = 3;
+                int result = RNG.Next(0, GifCount);
+
+                string[] Gif = HugGifs();
+
+                var embed = new DiscordEmbedBuilder()
                 {
-                    IconUrl = usr.AvatarUrl,
-                    Name = $"{ctx.User.Username} hugged {usr.Username}... OwO...",
-                },
-                Color = new DiscordColor("#FF6699"),
-                ImageUrl = Gif[result]
-            };
-            await ctx.RespondAsync(embed: embed.Build());
+                    Author = new DiscordEmbedBuilder.EmbedAuthor
+                    {
+                        IconUrl = usr.AvatarUrl,
+                        Name = $"{ctx.User.Username} hugged {usr.Username}... OwO...",
+                    },
+                    Color = new DiscordColor("#FF6699"),
+                    ImageUrl = Gif[result]
+                };
+                await ctx.RespondAsync(embed: embed.Build());
+            }
         }
 
         [Command("setgame"), Description("Sets the game of the bot. Put quotation marks.")]
         public async Task SetGame(CommandContext ctx, [RemainingTextAttribute] string game)
         {
-            var Game = new DiscordGame()
+            if (ctx.User.Id != ctx.Client.CurrentApplication.Owner.Id)
             {
-                Name = $"{game}"
-            };
-            await ctx.Client.UpdateStatusAsync(Game);
+                await ctx.RespondAsync("Only the bot owner can do this!");
+                return;
+            }
+            else
+            {
+                var Game = new DiscordGame()
+                {
+                    Name = $"{game}"
+                };
 
-            await ctx.RespondAsync($"Game is now: **{game}**");
+                await ctx.Client.UpdateStatusAsync(Game);
+
+                await ctx.RespondAsync($"Game is now: **{game}**");
+            }
         }
 
         [Command("choose"), Description("Randomly chooses between up to 4 options\n**Usage:** |choose (choice 1) (choice 2) (choice 3) (choice 4)")]
@@ -294,7 +331,6 @@ namespace KaeruBot
                 "https://i.imgur.com/G8u9fvk.gif",
                 "https://i.imgur.com/KumfkXF.gif",
                 "https://i.imgur.com/zpVKJcc.gif",
-                "https://pa1.narvii.com/6193/7b9e5989093734cd764c54cb42ec976c7a370c6e_hq.gif",
                 "https://i.imgur.com/qgGOQng.gif"
             };
         }

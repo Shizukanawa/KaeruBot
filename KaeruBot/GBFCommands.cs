@@ -37,7 +37,7 @@ namespace KaeruBot
             int result;
 
 
-            var filePath = "Data/Spark.xml";
+            var filePath = "./Data/Spark.xml";
             var xmlDoc = XElement.Load(filePath);
 
             //Takes the User ID for the Discord user and puts it into the string Player
