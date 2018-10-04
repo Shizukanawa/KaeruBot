@@ -109,22 +109,6 @@ namespace KaeruBot
                 await ctx.RespondAsync($"**{SName}** has **{SCrystals} Crystals** and **{STickets} Tickets** \n" +
                     $"Which means you have: **{result} draws**");
             }
-
-            //var filePath = @"C:\Users\Trung\OneDrive\KaeruBot\KaeruBot\data\Spark.json";
-            //var jsonData = System.IO.File.ReadAllText(filePath);
-            //var sparkdata = JsonConvert.DeserializeObject<List<data>>(jsonData) ?? new List<data>();
-
-            //sparkdata.Add(new data()
-            //{
-            //    Name = $"{ctx.User.Username}#{ctx.User.Discriminator}",
-            //    Crystals = crystals,
-            //    Tickets = tickets
-            //});
-
-            //jsonData = JsonConvert.SerializeObject(sparkdata, Formatting.Indented);
-            //System.IO.File.WriteAllText(filePath, jsonData);
-
-            //await ctx.RespondAsync("Added");
         }
 
         [Command("roulette"), Description("'Spins a roulette from GBF\n**Usage:** |roulette'")]

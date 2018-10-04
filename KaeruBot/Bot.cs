@@ -4,12 +4,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
+using System.IO;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.VoiceNext;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace KaeruBot
 {
@@ -26,9 +29,14 @@ namespace KaeruBot
 
         public static async Task MainAsync(string[] args)
         {
+            var filePath = "./Data/Token.json";
+            var jsonData = System.IO.File.ReadAllText(filePath);
+            Token _Token = JsonConvert.DeserializeObject<Token>(jsonData);
+
             discord = new DiscordClient(new DiscordConfiguration
             {
-                Token = "",
+                
+                Token = _Token.token,
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
                 LogLevel = LogLevel.Debug
@@ -77,6 +85,10 @@ namespace KaeruBot
 
             await Task.Delay(-1);
         }
+    }
 
+    public class Token
+    {
+        public string token { get; set; }
     }
 }

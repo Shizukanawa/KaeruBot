@@ -14,10 +14,17 @@ namespace KaeruBot
 {
     class TestCommands
     {
-        [Command("owner"), Description("A test")]
-        public async Task Owner(CommandContext ctx)
+        [Command("fields")]
+        public async Task Fields(CommandContext ctx)
         {
-            await ctx.RespondAsync($"{ctx.Client.CurrentApplication.Owner.Id}");
+
+            var embed = new DiscordEmbedBuilder()
+            {
+                Title = "Test",
+                Description = "hi",
+            };
+            embed.AddField("Test", "Hi", true);
+            await ctx.RespondAsync(embed: embed.Build());
         }
 
         [Command("reaction"), Description("a test")]
