@@ -5,3 +5,10 @@ A probably shitty written bot that is mostly used for me and GBF players that wa
 
 ## Requirements
 .NET Core Runtime
+
+### Commands
+| Command name  | Usage         | Description |
+| ------------- | ------------- | ----------- |
+| Help          | |help         | Lists a table with commands |
+| Choose  | |choose item1 item 2  | Chooses randomly between 4 items |
+| Getmembers | |getmembers | Gets the amount of members |
