@@ -116,10 +116,8 @@ namespace KaeruBot
             }
             else
             {
-                int GifCount = 5;
-                int result = RNG.Next(0, GifCount);
-
-                string[] Gif = PatGifs();
+                string[] _patGifs = PatGifs();
+                int _result = RNG.Next(0, _patGifs.Length);
 
                 var embed = new DiscordEmbedBuilder()
                 {
@@ -129,7 +127,7 @@ namespace KaeruBot
                         Name = $"{usr.Username}, You got a pat from {ctx.User.Username}!"
                     },
                     Color = new DiscordColor("#FF6699"),
-                    ImageUrl = Gif[result]
+                    ImageUrl = _patGifs[_result]
                 };
                 await ctx.RespondAsync(embed: embed.Build());
             }
@@ -144,10 +142,8 @@ namespace KaeruBot
             }
             else
             {
-                int GifCount = 9;
-                int result = RNG.Next(0, GifCount);
-
-                string[] Gif = HandHoldsGifs();
+                string[] _handholdGifs = HandHoldsGifs();
+                int _result = RNG.Next(0, _handholdGifs.Length);
 
                 var embed = new DiscordEmbedBuilder()
                 {
@@ -157,7 +153,7 @@ namespace KaeruBot
                         Name = $"{ctx.User.Username} held hands with {usr.Username}... Lewd...",
                     },
                     Color = new DiscordColor("#FF6699"),
-                    ImageUrl = Gif[result]
+                    ImageUrl = _handholdGifs[_result]
                 };
                 await ctx.RespondAsync(embed: embed.Build());
             }
@@ -172,10 +168,8 @@ namespace KaeruBot
             }
             else
             {
-                int GifCount = 3;
-                int result = RNG.Next(0, GifCount);
-
-                string[] Gif = KissGifs();
+                string[] _kissGifs = KissGifs();
+                int _result = RNG.Next(0, _kissGifs.Length);
 
                 var embed = new DiscordEmbedBuilder()
                 {
@@ -185,7 +179,7 @@ namespace KaeruBot
                         Name = $"{ctx.User.Username} kissed {usr.Username}... Aww... <3",
                     },
                     Color = new DiscordColor("#FF6699"),
-                    ImageUrl = Gif[result]
+                    ImageUrl = _kissGifs[_result]
                 };
                 await ctx.RespondAsync(embed: embed.Build());
             }
@@ -200,10 +194,8 @@ namespace KaeruBot
             }
             else
             {
-                int GifCount = 3;
-                int result = RNG.Next(0, GifCount);
-
-                string[] Gif = HugGifs();
+                string[] _hugGifs = HugGifs();
+                int _result = RNG.Next(0, _hugGifs.Length);
 
                 var embed = new DiscordEmbedBuilder()
                 {
@@ -213,7 +205,7 @@ namespace KaeruBot
                         Name = $"{ctx.User.Username} hugged {usr.Username}... OwO...",
                     },
                     Color = new DiscordColor("#FF6699"),
-                    ImageUrl = Gif[result]
+                    ImageUrl = _hugGifs[_result]
                 };
                 await ctx.RespondAsync(embed: embed.Build());
             }
@@ -310,49 +302,45 @@ namespace KaeruBot
 
         string[] PatGifs()
         {
-            return new string[]
-            {
-                "https://memestatic.fjcdn.com/gifs/Cute+kanna+gif+comp+large+mentionlist+thelunchtablehttpsfunnyjunkcomchannelanimemangacute+kanna+comp+2rxorlekhttpsfunnyjunkcomchannelanimemangakanna+comp+3ydsrllqhttpsfunnyjunkcomchannelanimemangakanna+comp+4kexslxrhttpsfunnyjunkcomchannelanimemangacute+kanna+compcporlpc_5f293f_6424003.gif",
-                "https://giant.gfycat.com/BlankGiftedBurro.gif",
-                "https://vignette.wikia.nocookie.net/cardfight/images/b/ba/Izumi_Reina_pat.gif",
-                "https://archive-media-0.nyafuu.org/c/image/1483/55/1483553008493.gif",
-                "https://i.pinimg.com/originals/9b/bd/d3/9bbdd3c7884308f36df49d3a3b2eb6f7.gif"
-            };
+            //Sets the filepath
+            string _filepath = "./Data/PatGifs.json";
+
+            //Reads from the json file inside the filepath
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+
+            //Makes a new JArray that has been parsed from the file
+            JArray _JpatGifs = JArray.Parse(_jsonData);
+
+            //Converts the JArray into a regular array so we can return it
+            string[] _patGifs = _JpatGifs.ToObject<string[]>();
+            return _patGifs;
         }
 
         string[] HandHoldsGifs()
         {
-            return new string[]
-            {
-                "http://i2.kym-cdn.com/photos/images/newsfeed/000/932/422/4ad.gif",
-                "http://i0.kym-cdn.com/entries/icons/original/000/021/658/hand_holding.gif",
-                "http://i3.kym-cdn.com/photos/images/newsfeed/000/932/366/0a7.gif",
-                "http://i0.kym-cdn.com/photos/images/newsfeed/000/932/360/509.gif",
-                "https://i.imgur.com/G8u9fvk.gif",
-                "https://i.imgur.com/KumfkXF.gif",
-                "https://i.imgur.com/zpVKJcc.gif",
-                "https://i.imgur.com/qgGOQng.gif"
-            };
+            string _filepath = "./Data/HandHoldGifs.json";
+            var _jsondata = System.IO.File.ReadAllText(_filepath);
+            JArray _JhandholdGifs = JArray.Parse(_jsondata);
+            string[] _handholdGifs = _JhandholdGifs.ToObject<string[]>();
+            return _handholdGifs;
         }
         
         string[] KissGifs()
         {
-            return new string[]
-            {
-                "https://i.imgur.com/sGVgr74.gif",
-                "https://media.giphy.com/media/lWnaY7WUymoxO/giphy.gif",
-                "https://i.pinimg.com/originals/6e/2f/e9/6e2fe9073f4e6aa4080e2e9ab5e3f790.gif"
-            };
+            string _filepath = "./Data/KissGifs.json";
+            var _jsondata = System.IO.File.ReadAllText(_filepath);
+            JArray _JkissGifs = JArray.Parse(_jsondata);
+            string[] _kissGifs = _JkissGifs.ToObject<string[]>();
+            return _kissGifs;
         }
 
         string[] HugGifs()
         {
-            return new string[]
-            {
-                "https://thumbs.gfycat.com/WellgroomedVapidKitten-max-1mb.gif",
-                "https://cdn140.picsart.com/247171032013202.gif?r240x240",
-                "https://78.media.tumblr.com/a4119e7feb02c0094a6628e6b7cf3924/tumblr_mvqfcgI5eQ1s2p1gco1_500.gif"
-            };
+            string _filepath = "./Data/HugGifs.json";
+            var _jsondata = System.IO.File.ReadAllText(_filepath);
+            JArray _JhugGifs = JArray.Parse(_jsondata);
+            string[] _hugGifs = _JhugGifs.ToObject<string[]>();
+            return _hugGifs;
         }
 
         int[] SlotMachine()

@@ -21,6 +21,7 @@ namespace KaeruBot
         public static DiscordClient discord;
         public static CommandsNextModule commands;
         static InteractivityModule interactivity;
+        //DiscordShardedClient shard;
 
         public static void Main(string[] args)
         {
@@ -34,8 +35,7 @@ namespace KaeruBot
             Token _Token = JsonConvert.DeserializeObject<Token>(jsonData);
 
             discord = new DiscordClient(new DiscordConfiguration
-            {
-                
+            { 
                 Token = _Token.token,
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
