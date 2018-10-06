@@ -9,6 +9,8 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.XPath;
@@ -487,6 +489,7 @@ namespace KaeruBot
 
             if (draw_amount == 10)
             {
+                //If everything is R, this will make the 10th be SR or higher.
                 if (results[0] == "R" && results[1] == "R" && results[2] == "R" && results[3] == "R" && results[4] == "R" && results[5] == "R" && results[6] == "R" && results[7] == "R" && results[8] == "R" && results[9] == "R")
                 {
                     SRSSR = RNG.Next(1, 101);
@@ -702,80 +705,74 @@ namespace KaeruBot
 
         string[] NormalCharacter()
         {
-            return new string[]
-            { "(Agielba)", "(Albert)", "(Aletheia)", "(Aliza)", "(Altair)", "(Amira)", "(Anne)", "(Anthuria)",
-                "(Aoidos)", "(Arriet)", "(Arulumaya)", "(Ayer)", "(Azazel)", "(Baotorda)", "(Beatrix (Dark))",
-                "(Cagliostro (Dark))", "(Carmelina)", "(Catherine)", "(Cerberus)", "(Charlotta)", "(Chat Noir)",
-                "(Clarisse (Fire))", "(Clarisse (Light))", "(De La Fille (Light))", "(De La Fille (Earth))", "(Dorothy and Claudia)",
-                "(Eustace)", "(Feena)", "(Ferry)", "(Forte)", "(Gawain)", "(Ghandagoza)", "(Grea)", "(Hallessena)",
-                "(Heles)", "(Ilsa)", "(Izmir)", "(Jeanne d'Arc (Light))", "(Jeanne d'Arc (Dark))", "(Juliet)",
-                "(Korwa)", "(Lady Grey)", "(Lady Katapillar and Vira)", "(Lancelot)", "(Lennah)", "(Lilele)", "(Lily)",
-                "(Magisa)", "(Marquiares)", "(Melissabelle)", "(Melleau)", "(Metera (Wind))", "(Metera (Fire))",
-                "(Narmaya)", "(Nemone)", "(Nezahualpilli)", "(Nicholas)", "(Percival)", "(Petra)", "(Razia)",
-                "(Robomi)", "(Romeo)", "(Rosamia)", "(Sara)", "(Sarunan (Light))", "(Sarunan (Dark))", "(Scathacha)",
-                "(Seruel)", "(Siegfried)", "(Silva)", "(Societte (Water))", "(Societte (Fire))", "(Sophia)", "(Therese)",
-                "(Tiamat)", "(Vane)", "(Vania)", "(Vaserega (Dark))", "(Vaserega (Earth))", "(Veight)", "(Vira (Dark))",
-                "(Yggdrasil)", "(Yngwie)", "(Yodarha)", "(Yuel (Fire))", "(Yuel (Water))", "(Yuisis)", "(Zalhamelina)",
-                "(Zeta)", "(Zeta (Dark))", "(Zooey (Light))", "(Cucouroux)", "(Soriz)", "(Wulf and Renie)"
-            };
+            string _filepath = "./Data/GranblueFantasy/NormalCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JnormalCharacters = JArray.Parse(_jsonData);
+            string[] _normalCharacters = _JnormalCharacters.ToObject<string[]>();
+            return _normalCharacters;
         }
 
         string[] GrandCharacter()
         {
-            return new string[]
-            {
-                "(Katalina (Grand))", "(Rackam (Grand))", "(Io (Grand))", "(Eugene (Grand))", "(Rosetta (Grand)", "(Lecia (Grand)), Cain (Grand))"
-            };
+            string _filepath = "./Data/GranblueFantasy/GrandCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JgrandCharacters = JArray.Parse(_jsonData);
+            string[] _grandCharacters = _JgrandCharacters.ToObject<string[]>();
+            return _grandCharacters;
         }
 
         string[] FlashCharacter()
         {
-            return new string[]
-            {
-                "(Black Knight)", "(Orchid)", "(Sturm)", "(Drang)", "(Vira (Grand))", "(Lucio)", "(Olivia)", "(Alexiel)", "(Summer Zooey)"
-            };
+            string _filepath = "./Data/GranblueFantasy/FlashCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JflashCharacters = JArray.Parse(_jsonData);
+            string[] _flashCharacters = _JflashCharacters.ToObject<string[]>();
+            return _flashCharacters;
         }
 
         string[] SummerCharacter()
         {
-            return new string[]
-            {
-                "(Beatrix (Summer))", "(Danua (Summer))", "(De La Fille (Summer))", "(Diantha (Summer))", "(Heles (Summer))",
-                "(Io (Summer))", "(Izmir (Summer))", "(Jeanne d'Arc (Summer))", "(Korwa (Summer))", "(Narmaya (Summer))",
-                "(Percival (Summer))", "(Siegfried (Summer))", "(Vira (Summer))", "(Zeta (Summer))", "(Zooey (Summer))"
-            };
+            string _filepath = "./Data/GranblueFantasy/SummerCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JsummerCharacters = JArray.Parse(_jsonData);
+            string[] _summerCharacters = _JsummerCharacters.ToObject<string[]>();
+            return _summerCharacters;
         }
 
         string[] HalloweenCharacter()
         {
-            return new string[]
-            {
-                "(Cagliostro (Halloween))", "(Charlotta (Halloween))", "(Eustace (Halloween))", "(Danua (Halloween))"
-            };
+            string _filepath = "./Data/GranblueFantasy/HalloweenCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JhalloweenCharacters = JArray.Parse(_jsonData);
+            string[] _halloweenCharacters = _JhalloweenCharacters.ToObject<string[]>();
+            return _halloweenCharacters;
         }
 
         string[] WinterCharacter()
         {
-            return new string[]
-            {
-                "(Arulumaya (Winter))", "(Clarisse (Winter))", "(Mary (Winter))", "(Rosetta (Winter)"
-            };
+            string _filepath = "./Data/GranblueFantasy/WinterCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JwinterCharacters = JArray.Parse(_jsonData);
+            string[] _winterCharacters = _JwinterCharacters.ToObject<string[]>();
+            return _winterCharacters;
         }
 
         string[] ZodiacCharacter()
         {
-            return new string[]
-            {
-                "(Andira)", "(Anila)", "(Mahira)", "(Vajra)"
-            };
+            string _filepath = "./Data/GranblueFantasy/ZodiacCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JzodiacCharacters = JArray.Parse(_jsonData);
+            string[] _zodiacCharacters = _JzodiacCharacters.ToObject<string[]>();
+            return _zodiacCharacters;
         }
         
         string[] ValentineCharacter()
         {
-            return new string[]
-            {
-                "Medusa (Valentine)"
-            };
+            string _filepath = "./Data/GranblueFantasy/ValentineCharacters.json";
+            var _jsonData = System.IO.File.ReadAllText(_filepath);
+            JArray _JvalentineCharacters = JArray.Parse(_jsonData);
+            string[] _valentineCharacters = _JvalentineCharacters.ToObject<string[]>();
+            return _valentineCharacters;
         }
     }
 }
