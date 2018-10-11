@@ -18,6 +18,7 @@ A probably shitty written bot that is mostly used for me and GBF players that wa
 | Kiss | kiss `@user` | Kisses said person! |
 | Pat | pat `@user` | Pats said person! |
 | Math | math `number 1` `operator` `numer 2` | Does simple math |
+| GCD | gcd `number 1` `number 2` | Finds the greatest common divisor between 2 numbers |
 | Random | random `interval 1` `interval 2` | Picks a random number between the intervals |
 | Set game | setgame `game name` | Sets the bots game. Only the bot owner can do this! |
 | Slot machine | slot | It's like a slot machine |
