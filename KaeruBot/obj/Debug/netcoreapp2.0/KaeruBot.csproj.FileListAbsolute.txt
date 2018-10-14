@@ -54,7 +54,6 @@ C:\Users\Trung\Repos\KaeruBot\KaeruBot\bin\Debug\netcoreapp2.0\Microsoft.VisualS
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\bin\Debug\netcoreapp2.0\en\Microsoft.VisualStudio.Utilities.resources.dll
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\bin\Debug\netcoreapp2.0\en\Microsoft.VisualStudio.Imaging.resources.dll
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.csprojAssemblyReference.cache
-C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.Properties.Resources.resources
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.csproj.GenerateResource.cache
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.csproj.CoreCompileInputs.cache
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.AssemblyInfoInputs.cache
@@ -62,3 +61,6 @@ C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.Assembly
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.csproj.CopyComplete
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.dll
 C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\KaeruBot.pdb
+C:\Users\Trung\Repos\KaeruBot\KaeruBot\obj\Debug\netcoreapp2.0\Shizukanawa.KaeruBot.Properties.Resources.resources
+C:\Users\Trung\Repos\KaeruBot\KaeruBot\bin\Debug\netcoreapp2.0\Shizukanawa.BasicMathLib.dll
+C:\Users\Trung\Repos\KaeruBot\KaeruBot\bin\Debug\netcoreapp2.0\Shizukanawa.BasicMathLib.pdb

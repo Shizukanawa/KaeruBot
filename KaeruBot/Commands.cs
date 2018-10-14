@@ -12,10 +12,6 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using System.Xml;
-using System.Xml.Linq;
-using System.Xml.XPath;
-using System.Xml.Serialization;
 
 namespace KaeruBot
 {
@@ -232,6 +228,45 @@ namespace KaeruBot
             }
         }
 
+        [Command("gcd"), Description("Finds the greatest common divisor between 2 numbers\n**Usage:** |GCD (number 1) (number 2)")]
+        public async Task GCD(CommandContext ctx, int number1, int number2)
+        {
+            int _smallest;
+            int _largest;
+            int _remainder;
+
+            //Using Euclidean Algorithm
+
+            //Assigns smallest of a or b to _smallest and the largest to _largest.
+            _smallest = number1 <= number2 ? number1 : number2;
+            _largest = number1 <= number2 ? number2 : number1;
+
+            //Loops until _smallest is 0
+            while (_smallest > 0)
+            {
+                _remainder = _largest & _smallest;
+                _largest = _smallest;
+                _smallest = _remainder;
+            }
+
+            await ctx.RespondAsync($"The greatest common divisor is: **{_largest}**");
+        }
+
+        [Command("prime"), Description("Checks if the number is a prime\n**Usage** |prime (number)")]
+        public async Task Prime(CommandContext ctx, int number)
+        {
+            bool _truefalse = CheckPrime(number);
+
+            if (_truefalse == true)
+            {
+                await ctx.RespondAsync($"The number **{number}** is a **prime!**");
+            }
+            else
+            {
+                await ctx.RespondAsync($"The number **{number}** is **not a prime!**");
+            }
+        }
+
         [Command("choose"), Description("Randomly chooses between up to 4 options\n**Usage:** |choose (choice 1) (choice 2) (choice 3) (choice 4)")]
         public async Task Choose(CommandContext ctx, string option1 = null, string option2 = null, string option3 = null, string option4 = null)
         {
@@ -298,6 +333,19 @@ namespace KaeruBot
                     await ctx.RespondAsync($"I choose: {option4}");
                 }
             }
+        }
+
+        public static bool CheckPrime(int checkNumber)
+        {
+            if (checkNumber <= 1) return false;
+            else if (checkNumber <= 3) return true;
+            if (checkNumber % 2 == 0 || checkNumber % 3 == 0) return false;
+
+            for (int i = 5; i * i <= checkNumber; i = i + 6)
+            {
+                if (checkNumber % i == 0 || checkNumber % (i + 2) == 0) return false;
+            }
+            return true;
         }
 
         string[] PatGifs()
