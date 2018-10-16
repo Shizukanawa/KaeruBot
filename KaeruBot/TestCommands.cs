@@ -10,19 +10,12 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
-using Shizukanawa.BasicMathLib;
 using Shizukanawa.RiotAPI;
 
 namespace Shizukanawa.KaeruBot
 {
     class TestCommands
     {
-        [Command("sumtest")]
-        public async Task Sumtest(CommandContext ctx, int number1, int number2)
-        {
-            double i = SMath.Add(number1, number2);
-            await ctx.RespondAsync($"{i}");
-        }
 
         [Command("fields")]
         public async Task Fields(CommandContext ctx)
