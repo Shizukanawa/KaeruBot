@@ -12,8 +12,9 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Shizukanawa.BasicMathLib;
 
-namespace KaeruBot
+namespace Shizukanawa.KaeruBot
 {
     class Commands
     {
@@ -255,7 +256,7 @@ namespace KaeruBot
         [Command("prime"), Description("Checks if the number is a prime\n**Usage** |prime (number)")]
         public async Task Prime(CommandContext ctx, int number)
         {
-            bool _truefalse = CheckPrime(number);
+            bool _truefalse = isPrime.PrimeCheck(number);
 
             if (_truefalse == true)
             {
@@ -333,19 +334,6 @@ namespace KaeruBot
                     await ctx.RespondAsync($"I choose: {option4}");
                 }
             }
-        }
-
-        public static bool CheckPrime(int checkNumber)
-        {
-            if (checkNumber <= 1) return false;
-            else if (checkNumber <= 3) return true;
-            if (checkNumber % 2 == 0 || checkNumber % 3 == 0) return false;
-
-            for (int i = 5; i * i <= checkNumber; i = i + 6)
-            {
-                if (checkNumber % i == 0 || checkNumber % (i + 2) == 0) return false;
-            }
-            return true;
         }
 
         string[] PatGifs()

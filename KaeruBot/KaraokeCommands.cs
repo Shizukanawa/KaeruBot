@@ -11,11 +11,11 @@ using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.VoiceNext;
 
-namespace KaeruBot
+namespace Shizukanawa.KaeruBot
 {
     class KaraokeCommands
     {
-        [Command("join")]
+        /*[Command("join")]
         public async Task Join(CommandContext ctx, DiscordChannel channel)
         {
             var voice = ctx.Client.GetVoiceNextClient();
@@ -23,7 +23,7 @@ namespace KaeruBot
             {
 
             }
-        }
+        }*/
 
         [Command("karaoke")]
         public async Task Karaoke(CommandContext ctx, [RemainingTextAttribute] string Song)

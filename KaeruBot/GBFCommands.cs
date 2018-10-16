@@ -16,7 +16,7 @@ using System.Xml.Linq;
 using System.Xml.XPath;
 using System.Xml.Serialization;
 
-namespace KaeruBot
+namespace Shizukanawa.KaeruBot
 {
     class GBFCommands
     {

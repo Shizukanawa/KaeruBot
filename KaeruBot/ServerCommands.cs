@@ -10,7 +10,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 
-namespace KaeruBot
+namespace Shizukanawa.KaeruBot
 {
     class ServerCommands
     {

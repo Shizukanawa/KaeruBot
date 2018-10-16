@@ -14,7 +14,7 @@ using DSharpPlus.VoiceNext;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace KaeruBot
+namespace Shizukanawa.KaeruBot
 {
     public class Bot
     {
@@ -75,6 +75,7 @@ namespace KaeruBot
             commands.RegisterCommands<Commands>();
             commands.RegisterCommands<ServerCommands>();
             commands.RegisterCommands<GBFCommands>();
+            commands.RegisterCommands<LeagueCommands>();
 
             await discord.ConnectAsync();
 
