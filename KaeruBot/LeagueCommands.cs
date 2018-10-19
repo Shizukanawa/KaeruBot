@@ -10,68 +10,81 @@ using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shizukanawa.RiotAPI;
+using RiotSharp;
+using RiotSharp.Misc;
 
 namespace Shizukanawa.KaeruBot
 {
     class LeagueCommands
     {
         [Command("summoner"), Description("Gets a summoner by name.\n**Usage** |summoner (region) (name)")]
-        public async Task PSummoner(CommandContext ctx, string region, [RemainingTextAttribute] string name)
+        public async Task LSummoner(CommandContext ctx, string region, [RemainingTextAttribute] string name)
+        {
+            var ddjson = await DataDragon.GetDDVersionAsync(region);
+            if (ddjson == "invalidregion".ToLower())
+            {
+                await ctx.RespondAsync("Invalid Region");
+            }
+            else
+            {
+                var api = RiotApi.GetDevelopmentInstance(GetAPIKey().LeagueAPI);
+                try
+                {
+                    DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>(ddjson);
+                    var summoner = api.GetSummonerByName(GetRegion(region), name);
+                    var embed = new DiscordEmbedBuilder()
+                    {
+                        Title = $"Summoner: {summoner.Name}",
+                        Description = $"**Level:** {summoner.Level}\n**Summoner ID:** {summoner.Id}\n**Account ID:** {summoner.AccountId}",
+                        ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
+                    };
+                    await ctx.RespondAsync(embed: embed.Build());
+                }
+                catch (RiotSharpException ex)
+                {
+                    await ctx.RespondAsync(ex.Message);
+                }
+           }
+        }
+
+        private apikey GetAPIKey()
         {
             var filePath = "./Data/APIKeys/LeagueAPI.json";
             var jsonData = System.IO.File.ReadAllText(filePath);
             apikey _apikey = JsonConvert.DeserializeObject<apikey>(jsonData);
+            return _apikey;
+        }
 
-            string apiKey = _apikey.LeagueAPI;
-            string endpoint = Summoner.GetRegion(region);
-            string version = _apikey.Version;
-            string summonerName = name;
-
-            if (endpoint == "invalidregion")
+        private Region GetRegion(string region)
+        {
+            var regions = new Dictionary<string, Region>
             {
-                await ctx.RespondAsync("Invalid region");
+                { "na", Region.na },
+                { "euw", Region.euw },
+                { "eune", Region.eune },
+                { "br", Region.br },
+                { "kr", Region.kr },
+                { "lan", Region.lan },
+                { "las", Region.las },
+                { "tr", Region.tr },
+                { "oce", Region.oce },
+                { "jp", Region.jp },
+                { "ru", Region.ru }
+            };
+
+            if (regions.ContainsKey(region))
+            {
+                return regions[region];
             }
             else
             {
-                Uri url = new Uri($"https://{endpoint}/lol/summoner/v{version}/summoners/by-name/{summonerName}?api_key={apiKey}");
-                string jsonDataSummoner = await Summoner.GetSummonerAsync(url);
-
-                if (jsonDataSummoner == "BadRequest".ToLower()) await ctx.RespondAsync("Bad Request.");
-                if (jsonDataSummoner == "Unauthorized".ToLower()) await ctx.RespondAsync("Unauthorized");
-                if (jsonDataSummoner == "Forbidden".ToLower()) await ctx.RespondAsync("Forbidden.");
-                if (jsonDataSummoner == "DataNotFound".ToLower()) await ctx.RespondAsync("Player not found.");
-                if (jsonDataSummoner == "MethodNotAllowed".ToLower()) await ctx.RespondAsync("MethodNotAllowed");
-                if (jsonDataSummoner == "UnsupportedMediaType".ToLower()) await ctx.RespondAsync("Unsupported Media Type");
-                if (jsonDataSummoner == "PlayerExistNoMatch".ToLower()) await ctx.RespondAsync("Player exist but no matches played.");
-                if (jsonDataSummoner == "RateLimit  Exceeded".ToLower()) await ctx.RespondAsync("Rate Limit Exceeded.");
-                if (jsonDataSummoner == "InternalServerError".ToLower()) await ctx.RespondAsync("Internal Server Error");
-                if (jsonDataSummoner == "BadGateway".ToLower()) await ctx.RespondAsync("Bad Gateway");
-                if (jsonDataSummoner == "ServiceUnavailable".ToLower()) await ctx.RespondAsync("Service Unavailable");
-                if (jsonDataSummoner == "GatewayTimeout".ToLower()) await ctx.RespondAsync("Gateway Timeout");
-                else
-                {
-                    //Summoner
-                    Summoner.SummonerData summoner = JsonConvert.DeserializeObject<Summoner.SummonerData>(jsonDataSummoner);
-
-                    //Data Dragon
-                    string output = DataDragon.GetDDVersionAsync(region).GetAwaiter().GetResult();
-                    DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>(output);
-
-                    var embed = new DiscordEmbedBuilder()
-                    {
-                        Title = $"Summoner: {summoner.name}",
-                        Description = $"**Level:** {summoner.summonerLevel}\n**Summoner ID:** {summoner.id}\n**Account ID:** {summoner.accountId}",
-                        ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.profileIconId}.png"
-                    };
-                    await ctx.RespondAsync(embed: embed.Build());
-                }
+                return Region.global;
             }
         }
 
         public class apikey
         {
             public string LeagueAPI { get; set; }
-            public string Version { get; set; }
         }
 
     }

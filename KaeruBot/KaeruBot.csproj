@@ -14,6 +14,7 @@
     <PackageReference Include="DSharpPlus.Interactivity" Version="3.2.3" />
     <PackageReference Include="DSharpPlus.VoiceNext" Version="3.2.3" />
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="RiotSharp" Version="3.0.1" />
     <PackageReference Include="Shizukanawa.RiotAPI" Version="1.0.6" />
   </ItemGroup>
 

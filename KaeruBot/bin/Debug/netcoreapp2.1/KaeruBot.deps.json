@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.1",
-    "signature": "8a0fafc7ca4763388027e7861ce9528297fa4c6f"
+    "signature": "5aed4afe2e67b86cea93312d84ac4f7777bb6e73"
   },
   "compilationOptions": {},
   "targets": {
@@ -13,6 +13,7 @@
           "DSharpPlus.Interactivity": "3.2.3",
           "DSharpPlus.VoiceNext": "3.2.3",
           "Newtonsoft.Json": "11.0.2",
+          "RiotSharp": "3.0.1",
           "Shizukanawa.RiotAPI": "1.0.6",
           "Microsoft.VisualStudio.Windows.Forms": "15.0.0.0",
           "Shizukanawa.BasicMathLib": "1.0.0.0",
@@ -80,6 +81,17 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {
             "assemblyVersion": "11.0.0.0",
             "fileVersion": "11.0.2.21924"
+          }
+        }
+      },
+      "RiotSharp/3.0.1": {
+        "dependencies": {
+          "Newtonsoft.Json": "11.0.2"
+        },
+        "runtime": {
+          "lib/netstandard1.3/RiotSharp.dll": {
+            "assemblyVersion": "3.0.1.0",
+            "fileVersion": "3.0.1.0"
           }
         }
       },
@@ -926,6 +938,13 @@
       "sha512": "sha512-IvJe1pj7JHEsP8B8J8DwlMEx8UInrs/x+9oVY+oCD13jpLu4JbJU2WCIsMRn5C4yW9+DgkaO8uiVE5VHKjpmdQ==",
       "path": "newtonsoft.json/11.0.2",
       "hashPath": "newtonsoft.json.11.0.2.nupkg.sha512"
+    },
+    "RiotSharp/3.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HSIpFbwmX6J2AcC0+02ASWOQkJYnb8l4M12rdhBQy1mkQGICCCl2QQ9Yz7XJv6RZ7ypbFZw0wp6or7rwO1xxxQ==",
+      "path": "riotsharp/3.0.1",
+      "hashPath": "riotsharp.3.0.1.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
       "type": "package",

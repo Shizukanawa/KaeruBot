@@ -280,6 +280,19 @@
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       },
+      "RiotSharp/3.0.1": {
+        "type": "package",
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "Newtonsoft.Json": "10.0.2"
+        },
+        "compile": {
+          "lib/netstandard1.3/RiotSharp.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.3/RiotSharp.dll": {}
+        }
+      },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
         "type": "package",
         "runtimeTargets": {
@@ -1956,6 +1969,17 @@
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
         "newtonsoft.json.11.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
+      ]
+    },
+    "RiotSharp/3.0.1": {
+      "sha512": "HSIpFbwmX6J2AcC0+02ASWOQkJYnb8l4M12rdhBQy1mkQGICCCl2QQ9Yz7XJv6RZ7ypbFZw0wp6or7rwO1xxxQ==",
+      "type": "package",
+      "path": "riotsharp/3.0.1",
+      "files": [
+        "lib/netstandard1.3/RiotSharp.dll",
+        "lib/netstandard1.3/RiotSharp.xml",
+        "riotsharp.3.0.1.nupkg.sha512",
+        "riotsharp.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.2": {
@@ -4521,6 +4545,7 @@
       "DSharpPlus.VoiceNext >= 3.2.3",
       "Microsoft.NETCore.App >= 2.1.0",
       "Newtonsoft.Json >= 11.0.2",
+      "RiotSharp >= 3.0.1",
       "Shizukanawa.RiotAPI >= 1.0.6"
     ]
   },
@@ -4590,6 +4615,10 @@
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[11.0.2, )"
+          },
+          "RiotSharp": {
+            "target": "Package",
+            "version": "[3.0.1, )"
           },
           "Shizukanawa.RiotAPI": {
             "target": "Package",

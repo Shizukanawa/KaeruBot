@@ -1,26 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
-using System.Linq;
-using System.IO;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity;
 using DSharpPlus.VoiceNext;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Shizukanawa.KaeruBot
 {
     public class Bot
     {
+        public static bool ReadyChecker = false;
         public static DiscordClient discord;
         public static CommandsNextModule commands;
-        static InteractivityModule interactivity;
         //DiscordShardedClient shard;
 
         public static void Main(string[] args)
@@ -81,12 +74,29 @@ namespace Shizukanawa.KaeruBot
             discord.Ready += async e =>
             {
                 await discord.UpdateStatusAsync(game);
+                DisplayGuildCount();
+                ReadyChecker = true;
             };
+
+#pragma warning disable CS1998
+            discord.Heartbeated += async e =>
+            {
+                if (ReadyChecker == true)
+                {
+                    DisplayGuildCount();
+                }
+            };
+#pragma warning restore CS1998
 
             await Task.Delay(-1);
         }
-    }
 
+        private static void DisplayGuildCount()
+        {
+            Console.ForegroundColor = ConsoleColor.Cyan;
+            Console.WriteLine($"[Server count: {discord.Guilds.Count}]");
+        }
+    }
     public class Token
     {
         public string token { get; set; }
