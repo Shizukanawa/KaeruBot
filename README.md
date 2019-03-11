@@ -1,5 +1,3 @@
-# Project moved to GitLab
-
 # KaeruBot
 A Discord Bot written in C# with the help of DSharpPlus made by an ametuer
 
