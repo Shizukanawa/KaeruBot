@@ -1,0 +1,13 @@
+# Ignore folders
+bin/
+obj/
+_ReSharper.*/
+.vs/
+TestResults/
+
+# Ignore files
+*.suo
+*.user
+*.config
+*.sdf
+*.log
