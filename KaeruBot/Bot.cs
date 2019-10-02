@@ -68,6 +68,7 @@ namespace Shizukanawa.KaeruBot
             commands.RegisterCommands<Commands>();
             commands.RegisterCommands<ServerCommands>();
             commands.RegisterCommands<GBFCommands>();
+            commands.RegisterCommands<LeagueCommands>();
 
             await discord.ConnectAsync();
 
