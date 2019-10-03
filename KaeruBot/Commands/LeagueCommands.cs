@@ -43,48 +43,20 @@ namespace Shizukanawa.KaeruBot
                     RiotNet.Models.Summoner summoner = await client.GetSummonerBySummonerNameAsync(name, platform);
                     /*To get rank of specific summoner, see in LEAGUE in api documentation*/
                     List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(summoner.Id, platform);
-                    switch (Entries.Count)
+                    string ranks = string.Empty;
+                    for (int i = 0; i < Entries.Count; ++i)
                     {
-                        case 0:
-                            var embed0 = new DiscordEmbedBuilder()
-                            {
-                                Title = $"Summoner: {summoner.Name}",
-                                Description = $"**Level:** {summoner.SummonerLevel}\n",
-                                ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
-                            };
-                            await ctx.RespondAsync(embed: embed0.Build());
-                            break;
-                        case 1:
-                            var embed1 = new DiscordEmbedBuilder()
-                            {
-                                Title = $"Summoner: {summoner.Name}",
-                                Description = $"**Level:** {summoner.SummonerLevel}\n**{Entries[0].QueueType}:** {Entries[0].Tier} {Entries[0].Rank}",
-                                ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
-                            };
-                            await ctx.RespondAsync(embed: embed1.Build());
-                            break;
-                        case 2:
-                            var embed2 = new DiscordEmbedBuilder()
-                            {
-                                Title = $"Summoner: {summoner.Name}",
-                                Description = $"**Level:** {summoner.SummonerLevel}\n**{Entries[0].QueueType}:** {Entries[0].Tier} {Entries[0].Rank}\n**{Entries[1].QueueType}:** {Entries[1].Tier} {Entries[1].Rank}\n",
-                                ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
-                            };
-                            await ctx.RespondAsync(embed: embed2.Build());
-                            break;
-                        case 3:
-                            var embed3 = new DiscordEmbedBuilder()
-                            {
-                                Title = $"Summoner: {summoner.Name}",
-                                Description = $"**Level:** {summoner.SummonerLevel}\n**{Entries[0].QueueType}:** {Entries[0].Tier} {Entries[0].Rank}\n**{Entries[1].QueueType}:** {Entries[1].Tier} {Entries[1].Rank}\n**{Entries[2].QueueType}:** {Entries[2].Tier} {Entries[2].Rank}\n",
-                                ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
-                            };
-                            await ctx.RespondAsync(embed: embed3.Build());
-                            break;
+                        ranks = ranks + $"**{Entries[i].QueueType}:** {Entries[i].Tier} {Entries[i].Rank}\n";
                     }
-
+                    var embed0 = new DiscordEmbedBuilder()
+                    {
+                        Title = $"Summoner: {summoner.Name}",
+                        Description = $"**Level:** {summoner.SummonerLevel}\n{ranks}",
+                        ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
+                    };
+                    await ctx.RespondAsync(embed: embed0.Build());
                 }
-                catch (RateLimitExceededException ex)
+                catch (Exception ex)
                 {
                     await ctx.RespondAsync(ex.Message);
                 }
@@ -110,57 +82,47 @@ namespace Shizukanawa.KaeruBot
                     string platform = GetRegion(region);
                     DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>((ddjson));
                     RiotNet.Models.Summoner summoner = await client.GetSummonerBySummonerNameAsync(name, platform);
-                    CurrentGameInfo spectator = await client.GetActiveGameBySummonerIdAsync(summoner.Id, platform);
+                    CurrentGameInfo spectators = await client.GetActiveGameBySummonerIdAsync(summoner.Id, platform);
 
+                    int playerCount = spectators.Participants.Count;
                     string redTeam = string.Empty;
                     string blueTeam = string.Empty;
-                    Champions.Champion champion = null;
-                    string rank = string.Empty;
+                    long[] championIds = new long[playerCount];
+                    string[] rank = new string[playerCount];
                     string profileIcon = string.Empty;
-
-                    int playerCount = spectator.Participants.Count;
+                    List<Champions.Champion> champions = new List<Champions.Champion>();
                     int i = 0;
-                    for (; i < playerCount / 2; ++i)
+                    for (; i < playerCount; ++i)
                     {
-                        List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(spectator.Participants[i].SummonerId, platform);
+                        List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(spectators.Participants[i].SummonerId, platform);
                         if (Entries[0].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[0].Tier} {Entries[0].Rank}";
+                            rank[i] = $"{Entries[0].Tier} {Entries[0].Rank}";
                         else if (Entries[1].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[1].Tier} {Entries[1].Rank}";
+                            rank[i] = $"{Entries[1].Tier} {Entries[1].Rank}";
                         else if (Entries[2].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[2].Tier} {Entries[2].Rank}";
+                            rank[i] = $"{Entries[2].Tier} {Entries[2].Rank}";
                         else
-                            rank = "UNRANKED";
-
-
-                        champion = await GetChampionFromIDAsync(region, spectator.Participants[i].ChampionId);
-
-                        if (spectator.Participants[i].SummonerName.ToLower() == name.ToLower())
-                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champion.name}.png";
-
-                        redTeam = redTeam + $"**Player:** {spectator.Participants[i].SummonerName} **Champ:** {champion.name}\n **Rank:** {rank}\n\n";
-                    }
-                    
-                    for(; i < playerCount; ++i)
-                    {
-                        List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(spectator.Participants[i].SummonerId, platform);
-                        if (Entries[0].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[0].Tier} {Entries[0].Rank}";
-                        else if (Entries[1].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[1].Tier} {Entries[1].Rank}";
-                        else if (Entries[2].QueueType == "RANKED_SOLO_5x5")
-                            rank = $"{Entries[2].Tier} {Entries[2].Rank}";
-                        else
-                            rank = "UNRANKED";
-
-                        champion = await GetChampionFromIDAsync(region, spectator.Participants[i].ChampionId);
-
-                        if (spectator.Participants[i].SummonerName.ToLower() == name.ToLower())
-                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champion.name}.png";
-
-                        blueTeam = blueTeam + $"**Player:** {spectator.Participants[i].SummonerName} **Champ:** {champion.name}\n **Rank:** {rank}\n\n";
+                            rank[i] = "UNRANKED";
+                            
+                        championIds[i] = spectators.Participants[i].ChampionId;
                     }
 
+                    await ctx.RespondAsync(championIds.Length.ToString());
+
+                    await ctx.RespondAsync("test");
+                    champions = await GetChampionsFromIDAsync(region, championIds);
+
+                    for (i = 0; i < playerCount / 2; ++i)
+                        redTeam = redTeam + $"**Player:** {spectators.Participants[i].SummonerName} **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+
+                    for (; i < playerCount; ++i)
+                        blueTeam = blueTeam + $"**Player:** {spectators.Participants[i].SummonerName} **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+
+                    for (i = 0; i < playerCount; ++i)
+                    {
+                        if (spectators.Participants[i].SummonerName.ToLower() == name.ToLower())
+                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champions[i].name}.png";
+                    }
                     var embed = new DiscordEmbedBuilder()
                     {
                         Title = $"Game for: {summoner.Name}",
@@ -169,7 +131,7 @@ namespace Shizukanawa.KaeruBot
                     };
                     await ctx.RespondAsync(embed: embed.Build());
                 }
-                catch (RateLimitExceededException ex)
+                catch (Exception ex)
                 {
                     await ctx.RespondAsync(ex.Message);
                 }
@@ -188,8 +150,9 @@ namespace Shizukanawa.KaeruBot
             return _apikey;
         }
         
-        private async Task<Champions.Champion> GetChampionFromIDAsync(string region, long id)
+        private async Task<List<Champions.Champion>> GetChampionsFromIDAsync(string region, long[] ids)
         {
+            List<Champions.Champion> listOfChamps = new List<Champions.Champion>();
             var ddjson = await DataDragon.GetDDVersionAsync(region);
             if (ddjson == "invalidregion".ToLower())
             {
@@ -202,14 +165,26 @@ namespace Shizukanawa.KaeruBot
                 var jsonData = await webClient.GetStringAsync(url);
                 var json = JsonConvert.DeserializeObject<Champions.RootChampions>(jsonData);
 
+                for (int i = 0; i < ids.Length; ++i)
+                {
+                    foreach (var champion in json.Data)
+                    {
+                        if (champion.Value.key == ids[i].ToString())
+                        {
+                            listOfChamps.Add(champion.Value);
+                            break;
+                        }
+                    }
+                }
+                /*
                 foreach (var champion in json.Data)
                 {
-                    if (champion.Value.key == id.ToString())
+                    if (champion.Value.key == ids.ToString())
                     {
                         return champion.Value;
                     }
-                }
-                return null;
+                }*/
+                return listOfChamps;
             }
         }
 
