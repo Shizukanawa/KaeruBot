@@ -106,10 +106,6 @@ namespace Shizukanawa.KaeruBot
                             
                         championIds[i] = spectators.Participants[i].ChampionId;
                     }
-
-                    await ctx.RespondAsync(championIds.Length.ToString());
-
-                    await ctx.RespondAsync("test");
                     champions = await GetChampionsFromIDAsync(region, championIds);
 
                     for (i = 0; i < playerCount / 2; ++i)
