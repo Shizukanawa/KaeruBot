@@ -10,6 +10,7 @@ namespace Shizukanawa.KaeruBot.Objects
         {
             public string type { get; set; }
             public string format { get; set; }
+            //The string in Dictionary is the champions name. i.e the objects name where the first key is Aatrox.
             public Dictionary<string, Champion> Data { get; set; }
         }
 

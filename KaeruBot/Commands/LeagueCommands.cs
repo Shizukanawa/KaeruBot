@@ -172,14 +172,6 @@ namespace Shizukanawa.KaeruBot
                         }
                     }
                 }
-                /*
-                foreach (var champion in json.Data)
-                {
-                    if (champion.Value.key == ids.ToString())
-                    {
-                        return champion.Value;
-                    }
-                }*/
                 return listOfChamps;
             }
         }
