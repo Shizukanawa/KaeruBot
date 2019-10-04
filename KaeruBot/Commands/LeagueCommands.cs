@@ -41,7 +41,6 @@ namespace Shizukanawa.KaeruBot
                     string platform = GetRegion(region);
                     DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>(ddjson);
                     RiotNet.Models.Summoner summoner = await client.GetSummonerBySummonerNameAsync(name, platform);
-                    /*To get rank of specific summoner, see in LEAGUE in api documentation*/
                     List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(summoner.Id, platform);
                     string ranks = string.Empty;
                     for (int i = 0; i < Entries.Count; ++i)
@@ -58,7 +57,7 @@ namespace Shizukanawa.KaeruBot
                 }
                 catch (Exception ex)
                 {
-                    await ctx.RespondAsync(ex.Message);
+                    await ctx.RespondAsync("Couldn't find the summoner in the region.");
                 }
             }
         }
@@ -129,7 +128,7 @@ namespace Shizukanawa.KaeruBot
                 }
                 catch (Exception ex)
                 {
-                    await ctx.RespondAsync(ex.Message);
+                    await ctx.RespondAsync("Couldn't find the summoner in the region or summoner isn't in game yet.");
                 }
             }
         }
