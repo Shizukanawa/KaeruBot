@@ -4,6 +4,7 @@ obj/
 _ReSharper.*/
 .vs/
 TestResults/
+DesignTimeBuild/
 
 # Ignore files
 *.suo
