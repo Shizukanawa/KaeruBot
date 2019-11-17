@@ -13,7 +13,7 @@ using Shizukanawa.RiotAPI;
 using MingweiSamuel.Camille;
 using MingweiSamuel.Camille.Enums;
 using MingweiSamuel.Camille.LeagueV4;
-using MingweiSamuel.Camille.SummonerV4;
+using MingweiSamuel.Camille.Util;
 using System.Net.Http;
 using Shizukanawa.KaeruBot.Objects;
 
@@ -52,6 +52,10 @@ namespace Shizukanawa.KaeruBot
                         ThumbnailUrl = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.profileicon}/img/profileicon/{summoner.ProfileIconId}.png"
                     };
                     await ctx.RespondAsync(embed: embed0.Build());
+                }
+                catch (RiotResponseException ex)
+                {
+                    await ctx.RespondAsync(ex.Message);
                 }
                 catch (Exception)
                 {
@@ -124,6 +128,14 @@ namespace Shizukanawa.KaeruBot
                         ThumbnailUrl = profileIcon
                     };
                     await ctx.RespondAsync(embed: embed.Build());
+                }
+                catch (RiotResponseException ex)
+                {
+                    await ctx.RespondAsync(ex.Message);
+                }
+                catch (NullReferenceException)
+                {
+                    await ctx.RespondAsync("Couldn't find the summoner or the summoner isn't in game yet.");
                 }
                 catch (Exception ex)
                 {
