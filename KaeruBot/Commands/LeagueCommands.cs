@@ -92,7 +92,7 @@ namespace Shizukanawa.KaeruBot
                     int i = 0;
                     for (; i < playerCount; ++i)
                     {
-                        LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, summoner.Id);
+                        LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, spectators.Participants[i].SummonerId);
                         for (int j = 0; j < Entries.Length; j++)
                         {
                             if (Entries[j].QueueType == "RANKED_SOLO_5x5")
