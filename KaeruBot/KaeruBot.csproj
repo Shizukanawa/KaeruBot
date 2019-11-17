@@ -13,8 +13,8 @@
     <PackageReference Include="DSharpPlus.CommandsNext" Version="3.2.3" />
     <PackageReference Include="DSharpPlus.Interactivity" Version="3.2.3" />
     <PackageReference Include="DSharpPlus.VoiceNext" Version="3.2.3" />
+    <PackageReference Include="MingweiSamuel.Camille" Version="2.4.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="RiotNet" Version="8.2.0" />
     <PackageReference Include="Shizukanawa.RiotAPI" Version="1.0.6" />
   </ItemGroup>
 

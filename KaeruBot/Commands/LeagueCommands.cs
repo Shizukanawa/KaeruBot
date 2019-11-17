@@ -10,9 +10,10 @@ using DSharpPlus.Interactivity;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Shizukanawa.RiotAPI;
-using RiotNet;
-using RiotNet.Converters;
-using RiotNet.Models;
+using MingweiSamuel.Camille;
+using MingweiSamuel.Camille.Enums;
+using MingweiSamuel.Camille.LeagueV4;
+using MingweiSamuel.Camille.SummonerV4;
 using System.Net.Http;
 using Shizukanawa.KaeruBot.Objects;
 
@@ -23,7 +24,7 @@ namespace Shizukanawa.KaeruBot
         public static HttpClient webClient = new HttpClient();
 
         [Command("summoner"), Description("Gets a summoner by name.\n**Usage** |summoner (region) (name)")]
-        public async Task LSummoner(CommandContext ctx, string region, [RemainingTextAttribute] string name)
+        public async Task LSummoner(CommandContext ctx, string region, [RemainingText] string name)
         {
             var ddjson = await DataDragon.GetDDVersionAsync(region);
             if (ddjson == "invalidregion".ToLower())
@@ -32,18 +33,15 @@ namespace Shizukanawa.KaeruBot
             }
             else
             {
-                IRiotClient client = new RiotClient(new RiotClientSettings
-                {
-                    ApiKey = GetAPIKey().LeagueAPI
-                });
+                RiotApi riotApi = RiotApi.NewInstance(GetAPIKey().LeagueAPI);
                 try
                 {
-                    string platform = GetRegion(region);
+                    Region platform = GetRegion(region);
                     DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>(ddjson);
-                    RiotNet.Models.Summoner summoner = await client.GetSummonerBySummonerNameAsync(name, platform);
-                    List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(summoner.Id, platform);
+                    var summoner = await riotApi.SummonerV4.GetBySummonerNameAsync(platform, name);
+                    LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, summoner.Id);
                     string ranks = string.Empty;
-                    for (int i = 0; i < Entries.Count; ++i)
+                    for (int i = 0; i < Entries.Length; ++i)
                     {
                         ranks = ranks + $"**{Entries[i].QueueType}:** {Entries[i].Tier} {Entries[i].Rank}\n";
                     }
@@ -55,7 +53,7 @@ namespace Shizukanawa.KaeruBot
                     };
                     await ctx.RespondAsync(embed: embed0.Build());
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     await ctx.RespondAsync("Couldn't find the summoner in the region.");
                 }
@@ -63,7 +61,7 @@ namespace Shizukanawa.KaeruBot
         }
 
         [Command("game"), Description("Gets the current game for the summoner.\n**Usage:** |game (region) (name)")]
-        public async Task LGame(CommandContext ctx, string region, [RemainingTextAttribute] string name)
+        public async Task LGame(CommandContext ctx, string region, [RemainingText] string name)
         {
             var ddjson = await DataDragon.GetDDVersionAsync(region);
             if (ddjson == "invalidregion".ToLower())
@@ -72,18 +70,15 @@ namespace Shizukanawa.KaeruBot
             }
             else
             {
-                IRiotClient client = new RiotClient(new RiotClientSettings
-                {
-                    ApiKey = GetAPIKey().LeagueAPI
-                });
+                RiotApi riotApi = RiotApi.NewInstance(GetAPIKey().LeagueAPI);
                 try
                 {
-                    string platform = GetRegion(region);
+                    Region platform = GetRegion(region);
                     DataDragon.Realms DataDragonRegion = JsonConvert.DeserializeObject<DataDragon.Realms>((ddjson));
-                    RiotNet.Models.Summoner summoner = await client.GetSummonerBySummonerNameAsync(name, platform);
-                    CurrentGameInfo spectators = await client.GetActiveGameBySummonerIdAsync(summoner.Id, platform);
+                    var summoner = await riotApi.SummonerV4.GetBySummonerNameAsync(platform, name);
+                    var spectators = await riotApi.SpectatorV4.GetCurrentGameInfoBySummonerAsync(platform, summoner.Id);
 
-                    int playerCount = spectators.Participants.Count;
+                    int playerCount = spectators.Participants.Length;
                     string redTeam = string.Empty;
                     string blueTeam = string.Empty;
                     long[] championIds = new long[playerCount];
@@ -93,8 +88,8 @@ namespace Shizukanawa.KaeruBot
                     int i = 0;
                     for (; i < playerCount; ++i)
                     {
-                        List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(spectators.Participants[i].SummonerId, platform);
-                        for (int j = 0; j < Entries.Count; j++)
+                        LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, summoner.Id);
+                        for (int j = 0; j < Entries.Length; j++)
                         {
                             if (Entries[j].QueueType == "RANKED_SOLO_5x5")
                                 rank[i] = $"{Entries[j].Tier} {Entries[j].Rank}";
@@ -107,6 +102,7 @@ namespace Shizukanawa.KaeruBot
                     }
                     champions = await GetChampionsFromIDAsync(region, championIds);
 
+                    
                     for (i = 0; i < playerCount / 2; ++i)
                         redTeam = redTeam + $"**Player:** {spectators.Participants[i].SummonerName} **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
 
@@ -116,8 +112,11 @@ namespace Shizukanawa.KaeruBot
                     for (i = 0; i < playerCount; ++i)
                     {
                         if (spectators.Participants[i].SummonerName.ToLower() == name.ToLower())
-                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champions[i].name}.png";
+                        {
+                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champions[i].id}.png";
+                        }
                     }
+
                     var embed = new DiscordEmbedBuilder()
                     {
                         Title = $"Game for: {summoner.Name}",
@@ -180,31 +179,28 @@ namespace Shizukanawa.KaeruBot
         /// </summary>
         /// <param name="region"></param>
         /// <returns></returns>
-        private string GetRegion(string region)
+        private Region GetRegion(string region)
         {
-            var regions = new Dictionary<string, string>
+            var regions = new Dictionary<string, Region>
             {
-                { "na", "NA1" },
-                { "euw", "EUW1" },
-                { "eune", "EUN1" },
-                { "br", "BR1" },
-                { "kr", "KR" },
-                { "lan", "LA1" },
-                { "las", "LA2" },
-                { "tr", "TR1" },
-                { "oce", "OC1" },
-                { "jp", "JP1" },
-                { "ru", "RU" }
+                { "na", Region.NA },
+                { "euw", Region.EUW },
+                { "eune", Region.EUNE },
+                { "br", Region.BR },
+                { "kr", Region.KR },
+                { "lan", Region.LAN },
+                { "las", Region.LAS },
+                { "tr", Region.TR },
+                { "oce", Region.OCE },
+                { "jp", Region.JP },
+                { "ru", Region.RU }
             };
 
             if (regions.ContainsKey(region))
             {
                 return regions[region];
             }
-            else
-            {
-                return "euw1";
-            }
+            return Region.EUW;
         }
 
 
