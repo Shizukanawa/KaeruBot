@@ -94,15 +94,15 @@ namespace Shizukanawa.KaeruBot
                     for (; i < playerCount; ++i)
                     {
                         List<LeagueEntry> Entries = await client.GetLeagueEntriesBySummonerIdAsync(spectators.Participants[i].SummonerId, platform);
-                        if (Entries[0].QueueType == "RANKED_SOLO_5x5")
-                            rank[i] = $"{Entries[0].Tier} {Entries[0].Rank}";
-                        else if (Entries[1].QueueType == "RANKED_SOLO_5x5")
-                            rank[i] = $"{Entries[1].Tier} {Entries[1].Rank}";
-                        else if (Entries[2].QueueType == "RANKED_SOLO_5x5")
-                            rank[i] = $"{Entries[2].Tier} {Entries[2].Rank}";
-                        else
-                            rank[i] = "UNRANKED";
-                            
+                        for (int j = 0; j < Entries.Count; j++)
+                        {
+                            if (Entries[j].QueueType == "RANKED_SOLO_5x5")
+                                rank[i] = $"{Entries[j].Tier} {Entries[j].Rank}";
+                        }
+
+                        if (string.IsNullOrEmpty(rank[i]))
+                            rank[i] = $"Unranked";
+
                         championIds[i] = spectators.Participants[i].ChampionId;
                     }
                     champions = await GetChampionsFromIDAsync(region, championIds);
@@ -128,7 +128,7 @@ namespace Shizukanawa.KaeruBot
                 }
                 catch (Exception ex)
                 {
-                    await ctx.RespondAsync("Couldn't find the summoner in the region or summoner isn't in game yet.");
+                    await ctx.RespondAsync(ex.Message);
                 }
             }
         }
@@ -184,17 +184,17 @@ namespace Shizukanawa.KaeruBot
         {
             var regions = new Dictionary<string, string>
             {
-                { "na", "na1" },
-                { "euw", "euw1" },
-                { "eune", "eun1" },
-                { "br", "br1" },
-                { "kr", "kr" },
-                { "lan", "la1" },
-                { "las", "la2" },
-                { "tr", "tr1" },
-                { "oce", "oc1" },
-                { "jp", "jp1" },
-                { "ru", "ru" }
+                { "na", "NA1" },
+                { "euw", "EUW1" },
+                { "eune", "EUN1" },
+                { "br", "BR1" },
+                { "kr", "KR" },
+                { "lan", "LA1" },
+                { "las", "LA2" },
+                { "tr", "TR1" },
+                { "oce", "OC1" },
+                { "jp", "JP1" },
+                { "ru", "RU" }
             };
 
             if (regions.ContainsKey(region))
