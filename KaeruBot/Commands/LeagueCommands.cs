@@ -108,10 +108,10 @@ namespace Shizukanawa.KaeruBot
 
                     
                     for (i = 0; i < playerCount / 2; ++i)
-                        redTeam = redTeam + $"**Player:** {spectators.Participants[i].SummonerName} **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+                        redTeam = redTeam + $"**Player:** {spectators.Participants[i].SummonerName}\npu **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
 
                     for (; i < playerCount; ++i)
-                        blueTeam = blueTeam + $"**Player:** {spectators.Participants[i].SummonerName} **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+                        blueTeam = blueTeam + $"**Player:** {spectators.Participants[i].SummonerName}\n **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
 
                     for (i = 0; i < playerCount; ++i)
                     {
@@ -124,9 +124,12 @@ namespace Shizukanawa.KaeruBot
                     var embed = new DiscordEmbedBuilder()
                     {
                         Title = $"Game for: {summoner.Name}",
-                        Description = $"**Red Team:**\n {redTeam}\n**Blue Team:**\n {blueTeam}\n",
                         ThumbnailUrl = profileIcon
                     };
+
+                    embed.AddField("Blue Team", blueTeam, true);
+                    embed.AddField("Red Team", redTeam, true);
+
                     await ctx.RespondAsync(embed: embed.Build());
                 }
                 catch (RiotResponseException ex)
