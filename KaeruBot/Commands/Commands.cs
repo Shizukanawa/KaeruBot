@@ -210,23 +210,31 @@ namespace Shizukanawa.KaeruBot
         [Command("setgame"), Description("Sets the game of the bot. Put quotation marks.")]
         public async Task SetGame(CommandContext ctx, [RemainingTextAttribute] string game)
         {
-            var result = ctx.Client.CurrentApplication.Owners.Select(x => x.Id == ctx.User.Id);
+            bool isOwner = false;
             foreach (var owner in ctx.Client.CurrentApplication.Owners)
             {
-                if (ctx.User.Id != owner.Id)
+                if (ctx.User.Id == owner.Id)
                 {
-                    await ctx.RespondAsync("Only the bot owner can do this!");
-                    return;
+                    isOwner = true;
+                    break;
                 }
             }
-            var Game = new DiscordActivity()
+
+            if (isOwner)
             {
-                Name = $"{game}"
-            };
+                var Game = new DiscordActivity()
+                {
+                    Name = $"{game}"
+                };
 
-            await ctx.Client.UpdateStatusAsync(Game);
+                await ctx.Client.UpdateStatusAsync(Game);
 
-            await ctx.RespondAsync($"Game is now: **{game}**");
+                await ctx.RespondAsync($"Game is now: **{game}**");
+            }
+            else
+            {
+                await ctx.RespondAsync("Only Bot Owners can use this command!");
+            }
         }
 
         [Command("gcd"), Description("Finds the greatest common divisor between 2 numbers\n**Usage:** |GCD (number 1) (number 2)")]
