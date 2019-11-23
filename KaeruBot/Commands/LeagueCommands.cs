@@ -14,12 +14,13 @@ using MingweiSamuel.Camille;
 using MingweiSamuel.Camille.Enums;
 using MingweiSamuel.Camille.LeagueV4;
 using MingweiSamuel.Camille.Util;
+using MingweiSamuel.Camille.SpectatorV4;
 using System.Net.Http;
 using Shizukanawa.KaeruBot.Objects;
 
 namespace Shizukanawa.KaeruBot
 {
-    class LeagueCommands
+    class LeagueCommands : BaseCommandModule
     {
         public static HttpClient webClient = new HttpClient();
 
@@ -89,37 +90,18 @@ namespace Shizukanawa.KaeruBot
                     string[] rank = new string[playerCount];
                     string profileIcon = string.Empty;
                     List<Champions.Champion> champions = new List<Champions.Champion>();
-                    int i = 0;
-                    for (; i < playerCount; ++i)
-                    {
-                        LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, spectators.Participants[i].SummonerId);
-                        for (int j = 0; j < Entries.Length; j++)
-                        {
-                            if (Entries[j].QueueType == "RANKED_SOLO_5x5")
-                                rank[i] = $"{Entries[j].Tier} {Entries[j].Rank}";
-                        }
 
-                        if (string.IsNullOrEmpty(rank[i]))
-                            rank[i] = $"Unranked";
+                    rank = await GetSummonerRanksAsync(riotApi, platform, spectators);
 
-                        championIds[i] = spectators.Participants[i].ChampionId;
-                    }
+                    championIds = GetChampionIDsFromCurrentGame(spectators);
+
                     champions = await GetChampionsFromIDAsync(region, championIds);
 
-                    
-                    for (i = 0; i < playerCount / 2; ++i)
-                        redTeam = redTeam + $"**Player:** {spectators.Participants[i].SummonerName}\npu **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+                    redTeam = PrintRedTeam(spectators, champions, rank);
 
-                    for (; i < playerCount; ++i)
-                        blueTeam = blueTeam + $"**Player:** {spectators.Participants[i].SummonerName}\n **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+                    blueTeam = PrintBlueTeam(spectators, champions, rank);
 
-                    for (i = 0; i < playerCount; ++i)
-                    {
-                        if (spectators.Participants[i].SummonerName.ToLower() == name.ToLower())
-                        {
-                            profileIcon = $"http://ddragon.leagueoflegends.com/cdn/{DataDragonRegion.n.champion}/img/champion/{champions[i].id}.png";
-                        }
-                    }
+                    profileIcon = GetProfileIcon(spectators, DataDragonRegion.n.champion, champions, name);
 
                     var embed = new DiscordEmbedBuilder()
                     {
@@ -189,6 +171,72 @@ namespace Shizukanawa.KaeruBot
             }
         }
 
+        private async Task<string[]> GetSummonerRanksAsync(RiotApi riotApi, Region platform, CurrentGameInfo spectators)
+        {
+            int playerCount = spectators.Participants.Length;
+            string[] rank = new string[playerCount];
+            for (int i = 0; i < playerCount; ++i)
+            {
+                LeagueEntry[] Entries = await riotApi.LeagueV4.GetLeagueEntriesForSummonerAsync(platform, spectators.Participants[i].SummonerId);
+                for (int j = 0; j < Entries.Length; j++)
+                {
+                    if (Entries[j].QueueType == "RANKED_SOLO_5x5")
+                        rank[i] = $"{Entries[j].Tier} {Entries[j].Rank}";
+                }
+
+                if (string.IsNullOrEmpty(rank[i]))
+                    rank[i] = $"Unranked";
+            }
+            return rank;
+        }
+
+        private long[] GetChampionIDsFromCurrentGame(CurrentGameInfo spectators)
+        {
+            int playerCount = spectators.Participants.Length;
+            long[] championIds = new long[playerCount];
+            for (int i = 0; i < playerCount; ++i)
+            {
+                championIds[i] = spectators.Participants[i].ChampionId;
+            }
+            return championIds;
+        }
+
+        private string PrintBlueTeam(CurrentGameInfo spectators, List<Champions.Champion> champions, string[] rank)
+        {
+            int playerCount = spectators.Participants.Length;
+            string result = string.Empty;
+            for (int i = 0; i < playerCount; ++i)
+            {
+                if (spectators.Participants[i].TeamId == 100)
+                    result = result + $"**Player:** {spectators.Participants[i].SummonerName}\n **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+            }
+            return result;
+        }
+
+        private string PrintRedTeam(CurrentGameInfo spectators, List<Champions.Champion> champions, string[] rank)
+        {
+            int playerCount = spectators.Participants.Length;
+            string result = string.Empty;
+            for (int i = 0; i < playerCount; ++i)
+            {
+                if (spectators.Participants[i].TeamId == 200)
+                    result = result + $"**Player:** {spectators.Participants[i].SummonerName}\n **Champ:** {champions[i].name}\n **Rank:** {rank[i]}\n\n";
+            }
+            return result;
+        }
+
+        private string GetProfileIcon(CurrentGameInfo spectators, string DDChampion, List<Champions.Champion> champions, string name)
+        {
+            int playerCount = spectators.Participants.Length;
+            string result = string.Empty;
+            for (int i = 0; i < playerCount; ++i)
+            {
+                if (spectators.Participants[i].SummonerName.ToLower() == name.ToLower())
+                    result = $"http://ddragon.leagueoflegends.com/cdn/{DDChampion}/img/champion/{champions[i].id}.png";
+            }
+            return result;
+        }
+
         /// <summary>
         /// Returns the League of Legends region
         /// </summary>
@@ -217,8 +265,6 @@ namespace Shizukanawa.KaeruBot
             }
             return Region.EUW;
         }
-
-
 
         private class apikey
         {

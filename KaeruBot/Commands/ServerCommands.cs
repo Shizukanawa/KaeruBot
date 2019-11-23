@@ -12,7 +12,7 @@ using DSharpPlus.Interactivity;
 
 namespace Shizukanawa.KaeruBot
 {
-    class ServerCommands
+    class ServerCommands : BaseCommandModule
     {
         [Command("getmembers"), Description("Gets the counts of members")]
         public async Task GetMembers(CommandContext ctx)

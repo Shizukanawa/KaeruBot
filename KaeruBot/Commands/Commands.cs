@@ -15,7 +15,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Shizukanawa.KaeruBot
 {
-    class Commands
+    class Commands : BaseCommandModule
     {
         private static readonly Random RNG = new Random();
 
@@ -23,9 +23,9 @@ namespace Shizukanawa.KaeruBot
         public async Task Hi(CommandContext ctx)
         {
             await ctx.RespondAsync($"👋 Hi, {ctx.User.Mention}!");
-            var interactivity = ctx.Client.GetInteractivityModule();
+            var interactivity = ctx.Client.GetInteractivity();
             var msg = await interactivity.WaitForMessageAsync(xm => xm.Author.Id == ctx.User.Id && xm.Content.ToLower() == "how are you?", TimeSpan.FromMinutes(1));
-            if (msg != null)
+            if (msg.Result != null)
                 await ctx.RespondAsync($"I'm fine, thank you!");
         }
 
@@ -210,22 +210,23 @@ namespace Shizukanawa.KaeruBot
         [Command("setgame"), Description("Sets the game of the bot. Put quotation marks.")]
         public async Task SetGame(CommandContext ctx, [RemainingTextAttribute] string game)
         {
-            if (ctx.User.Id != ctx.Client.CurrentApplication.Owner.Id)
+            var result = ctx.Client.CurrentApplication.Owners.Select(x => x.Id == ctx.User.Id);
+            foreach (var owner in ctx.Client.CurrentApplication.Owners)
             {
-                await ctx.RespondAsync("Only the bot owner can do this!");
-                return;
-            }
-            else
-            {
-                var Game = new DiscordGame()
+                if (ctx.User.Id != owner.Id)
                 {
-                    Name = $"{game}"
-                };
-
-                await ctx.Client.UpdateStatusAsync(Game);
-
-                await ctx.RespondAsync($"Game is now: **{game}**");
+                    await ctx.RespondAsync("Only the bot owner can do this!");
+                    return;
+                }
             }
+            var Game = new DiscordActivity()
+            {
+                Name = $"{game}"
+            };
+
+            await ctx.Client.UpdateStatusAsync(Game);
+
+            await ctx.RespondAsync($"Game is now: **{game}**");
         }
 
         [Command("gcd"), Description("Finds the greatest common divisor between 2 numbers\n**Usage:** |GCD (number 1) (number 2)")]

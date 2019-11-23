@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -13,7 +14,7 @@ namespace Shizukanawa.KaeruBot
     {
         public static bool ReadyChecker = false;
         public static DiscordClient discord;
-        public static CommandsNextModule commands;
+        public static CommandsNextExtension commands;
         //DiscordShardedClient shard;
 
         public static void Main(string[] args)
@@ -28,11 +29,11 @@ namespace Shizukanawa.KaeruBot
             Token _Token = JsonConvert.DeserializeObject<Token>(jsonData);
 
             discord = new DiscordClient(new DiscordConfiguration
-            { 
+            {
                 Token = _Token.token,
                 TokenType = TokenType.Bot,
                 UseInternalLogHandler = true,
-                LogLevel = LogLevel.Debug
+                LogLevel = LogLevel.Info
             });
 
             discord.MessageCreated += async e =>
@@ -43,26 +44,28 @@ namespace Shizukanawa.KaeruBot
 
             discord.UseInteractivity(new InteractivityConfiguration
             {
-                PaginationBehaviour = TimeoutBehaviour.Ignore,
-                PaginationTimeout = TimeSpan.FromMinutes(5),
+                PaginationBehaviour = DSharpPlus.Interactivity.Enums.PaginationBehaviour.Default,
                 Timeout = TimeSpan.FromMinutes(2)
             });
 
+            List<string> prefixes = new List<string>() { "|" };
+
             commands = discord.UseCommandsNext(new CommandsNextConfiguration
             {
-                StringPrefix = "|",
+                StringPrefixes = prefixes,
                 EnableDms = true,
                 EnableMentionPrefix = true
             });
 
             var vcfg = new VoiceNextConfiguration
             {
-                VoiceApplication = DSharpPlus.VoiceNext.Codec.VoiceApplication.Music
+                AudioFormat = AudioFormat.Default,
             };
 
-            var game = new DiscordGame()
+            var game = new DiscordActivity()
             {
-                Name = "Type |help for help!"
+                Name = "Type |help for help!",
+                ActivityType = ActivityType.Playing,
             };
 
             commands.RegisterCommands<Commands>();

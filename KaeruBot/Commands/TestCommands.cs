@@ -14,7 +14,7 @@ using Shizukanawa.RiotAPI;
 
 namespace Shizukanawa.KaeruBot
 {
-    class TestCommands
+    class TestCommands : BaseCommandModule
     {
 
         [Command("fields")]
@@ -51,16 +51,16 @@ namespace Shizukanawa.KaeruBot
             await Task.Delay(500);
             await Embed.CreateReactionAsync(emoji2);
 
-            var interactivity = ctx.Client.GetInteractivityModule();
-            var result1 = await interactivity.WaitForReactionAsync(xe => xe == emoji1, ctx.User, TimeSpan.FromSeconds(60));
-            var result2 = await interactivity.WaitForReactionAsync(xe => xe == emoji2, ctx.User, TimeSpan.FromSeconds(60));
-
-            if (result1 != null)
+            var interactivity = ctx.Client.GetInteractivity();
+            var result1 = await interactivity.WaitForReactionAsync(x => x.Emoji == emoji1, ctx.User, TimeSpan.FromSeconds(60));
+            var result2 = await interactivity.WaitForReactionAsync(x => x.Emoji == emoji2, ctx.User, TimeSpan.FromSeconds(60));
+            
+            if (result1.Result != null)
             {
                 await Embed.ModifyAsync(embed: embed.Build());
                 await Embed.DeleteAllReactionsAsync();
             }
-            if (result2 != null)
+            if (result2.Result != null)
             {
                 await Embed.ModifyAsync(embed: embed2.Build());
                 await Embed.DeleteAllReactionsAsync();

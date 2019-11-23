@@ -18,7 +18,7 @@ using System.Xml.Serialization;
 
 namespace Shizukanawa.KaeruBot
 {
-    class GBFCommands
+    class GBFCommands : BaseCommandModule
     {
         private static readonly Random RNG = new Random();
         string mode = "normal";
