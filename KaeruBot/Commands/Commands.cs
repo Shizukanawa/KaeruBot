@@ -91,10 +91,14 @@ namespace Shizukanawa.KaeruBot
         [Command("user"), Description("Displays information about a user.\n**Usage:** |user @user")]
         public async Task User(CommandContext ctx, DiscordUser usr)
         {
+            Thread.CurrentThread.CurrentUICulture = new System.Globalization.CultureInfo("dk-DK");
+            double unixTime = (usr.Id / 4194304) + 1420070400000;
+            
+            DateTime date = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc).AddMilliseconds(unixTime).ToLocalTime();
             var embed = new DiscordEmbedBuilder()
             {
                 Title = $"Profile for: {usr.Username}#{usr.Discriminator}",
-                Description = $"Username: {usr.Username} \nStatus: {usr.Presence.Status}\nAvatar: {usr.AvatarUrl}",
+                Description = $"Username: {usr.Username} \nStatus: {usr.Presence.Status}\nAvatar: [Avatar URL]({usr.AvatarUrl})\nJoin Date: {date.ToString("MMMM d yyyy HH:mm:ss")}",
                 ThumbnailUrl = usr.AvatarUrl,
                 Color = new DiscordColor("#FFFFFF"),
                 Timestamp = DateTime.UtcNow,
