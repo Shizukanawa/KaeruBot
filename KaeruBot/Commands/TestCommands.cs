@@ -30,6 +30,12 @@ namespace Shizukanawa.KaeruBot
             await ctx.RespondAsync(embed: embed.Build());
         }
 
+        [Command("phone")]
+        public async Task Phone(CommandContext ctx)
+        {
+            await ctx.RespondAsync(ctx.User.Verified.Value.ToString());
+        }
+
         [Command("reaction"), Description("a test")]
         public async Task React(CommandContext ctx)
         {
